@@ -16,3 +16,5 @@ auto get_lowest(const std::vector<DataFrame> &frames) -> DataFrame;
 
 auto get_behavior_from_accel(const std::vector<DataFrame> &accel_data, const Difficulty &difficulty) -> Behavior;
 auto detect_tamper(const std::vector<DataFrame> &accel_data) -> bool;
+
+void callibrate();
