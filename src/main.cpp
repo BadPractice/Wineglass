@@ -77,6 +77,7 @@ p {
 <p> <a href="/set_hard">Set to hard</a></p>
 <p> <a href="/present_mode">Present mode</a></p>
 <p> <a href="/game_mode">Game mode</a></p>
+<p> <a href="/callibrate">Callibrate</a></p>
 
 </body>
 </html>
@@ -105,6 +106,11 @@ void game_mode() {
 
 void start_game() {
     set_behavior(Behavior::good);
+    handle_root();
+}
+
+void request_callibrate() {
+    callibrate();
     handle_root();
 }
 
@@ -140,6 +146,7 @@ void setup(void) {
     server.on("/present_mode", present_mode);
     server.on("/game_mode", game_mode);
     server.on("/start_game", start_game);
+    server.on("/callibrate", request_callibrate);
 
     server.begin();
     pinMode(GREEN, OUTPUT);

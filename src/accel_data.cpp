@@ -3,16 +3,35 @@
 #include "behavior.h"
 #include "parameters.h"
 
+static double callibration_roll = 3.0;
+static double callibration_pitch = -1.0;
+
+static double last_roll = 0.0;
+static double last_pitch = 0.0;
+
 void fetch_new_dataframe(std::vector<DataFrame> &frames, const sensors_vec_t new_value) {
     if (frames.size() > 4) {
         frames.erase(frames.begin());
     }
+
     auto xa = new_value.x;
     auto ya = new_value.y;
     auto za = new_value.z;
-    auto roll = abs(atan2(ya, za) * 180.0 / PI);
-    auto pitch = abs(atan2(-xa, sqrt(ya * ya + za * za)) * 180.0 / PI);
-    frames.emplace_back(DataFrame{pitch, roll});
+    auto roll = atan2(ya, za) * 180.0 / PI;
+    auto pitch = atan2(-xa, sqrt(ya * ya + za * za)) * 180.0 / PI;
+
+    last_roll = roll;
+    last_pitch = pitch;
+
+    roll -= callibration_roll;
+    pitch -= callibration_pitch;
+
+    frames.emplace_back(DataFrame{abs(pitch), abs(roll)});
+}
+
+void callibrate() {
+    callibration_pitch = last_pitch;
+    callibration_roll = last_roll;
 }
 
 auto get_lowest(const std::vector<DataFrame> &frames) -> DataFrame {
