@@ -166,6 +166,7 @@ void setup(void) {
 }
 
 void loop() {
+    MDNS.update();
     server.handleClient();
     sensors_event_t a, g, temp;
     mpu.getEvent(&a, &g, &temp);
