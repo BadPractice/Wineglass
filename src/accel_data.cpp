@@ -11,7 +11,7 @@ void fetch_new_dataframe(std::vector<DataFrame> &frames, const sensors_vec_t new
     auto ya = new_value.y;
     auto za = new_value.z;
     auto roll = abs(atan2(ya, za) * 180.0 / PI);
-    auto pitch = abs(atan2(-xa, sqrt(ya * ya + za * za)) * 180.0 / PI);
+    auto pitch = abs(asin(xa / sqrt(xa * xa + ya * ya + za * za)) * 180.0 / PI);
     frames.emplace_back(DataFrame{pitch, roll});
 }
 
