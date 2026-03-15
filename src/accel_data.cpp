@@ -3,7 +3,7 @@
 #include "behavior.h"
 #include "parameters.h"
 
-void fetch_new_dataframe(std::vector<DataFrame> &frames, const sensors_vec_t new_value) {
+void fetch_new_dataframe(std::vector<DataFrame>& frames, const sensors_vec_t new_value) {
     if (frames.size() > 4) {
         frames.erase(frames.begin());
     }
@@ -15,7 +15,7 @@ void fetch_new_dataframe(std::vector<DataFrame> &frames, const sensors_vec_t new
     frames.emplace_back(DataFrame{pitch, roll});
 }
 
-auto get_lowest(const std::vector<DataFrame> &frames) -> DataFrame {
+auto get_lowest(const std::vector<DataFrame>& frames) -> DataFrame {
     DataFrame smallest{std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity()};
     for (auto frame : frames) {
         if (frame.pitch < smallest.pitch) {
@@ -25,14 +25,14 @@ auto get_lowest(const std::vector<DataFrame> &frames) -> DataFrame {
             smallest.roll = frame.roll;
         }
     }
-    Serial.print("pitch: ");
-    Serial.print(smallest.pitch);
-    Serial.print(" roll: ");
-    Serial.println(smallest.roll);
+    // Serial.print("pitch: ");
+    // Serial.print(smallest.pitch);
+    // Serial.print(" roll: ");
+    // Serial.println(smallest.roll);
     return smallest;
 }
 
-auto get_behavior_from_accel(const std::vector<DataFrame> &accel_data, const Difficulty &difficulty) -> Behavior {
+auto get_behavior_from_accel(const std::vector<DataFrame>& accel_data, const Difficulty& difficulty) -> Behavior {
     auto lowest_data = get_lowest(accel_data);
     if (std::max(lowest_data.pitch, lowest_data.roll) > difficulty.okey_threshold) {
         return Behavior::bad;
@@ -42,7 +42,7 @@ auto get_behavior_from_accel(const std::vector<DataFrame> &accel_data, const Dif
     }
     return Behavior::good;
 }
-auto detect_tamper(const std::vector<DataFrame> &accel_data) -> bool {
+auto detect_tamper(const std::vector<DataFrame>& accel_data) -> bool {
     DataFrame avg{0.0f, 0.0f};
     for (auto frame : accel_data) {
         avg.pitch += frame.pitch;

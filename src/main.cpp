@@ -9,8 +9,8 @@
 #include "behavior.h"
 #include "parameters.h"
 
-const char *ssid = "Wineglass";       // The name of the Wi-Fi network that will be created
-const char *password = "nocheating";  // The password required to connect to it, leave blank for an open network
+const char* ssid = "Hufnagl";                   // The name of the Wi-Fi network that will be created
+const char* password = "`=jd.S7rnUQ[R4t5dRgR";  // The password required to connect to it, leave blank for an open network
 
 ESP8266WebServer server(80);  // Create an HTTP server on port 80
 
@@ -119,7 +119,8 @@ void setup(void) {
     delay(10);
     Serial.println('\n');
 
-    WiFi.softAP(ssid, password);  // Start the access point
+    // WiFi.softAP(ssid, password);  // Start the access point
+    WiFi.begin(ssid, password);
     Serial.print("Access Point \"");
     Serial.print(ssid);
     Serial.println("\" started");
@@ -127,11 +128,11 @@ void setup(void) {
     Serial.print("IP address:\t");
     Serial.println(WiFi.softAPIP());
 
-    if (MDNS.begin("wineglass")) {  // Start the mDNS responder for esp8266.local
-        Serial.println("mDNS responder started");
-    } else {
-        Serial.println("Error setting up MDNS responder!");
-    }
+    // if (MDNS.begin("wineglass")) {  // Start the mDNS responder for esp8266.local
+    //     Serial.println("mDNS responder started");
+    // } else {
+    //     Serial.println("Error setting up MDNS responder!");
+    // }
 
     server.on("/", handle_root);
     server.on("/set_easy", set_easy);
@@ -158,6 +159,17 @@ void setup(void) {
         }
     }
 
+    int i = 0;
+    while (WiFi.status() != WL_CONNECTED) {  // Wait for the Wi-Fi to connect
+        delay(1000);
+        Serial.print(++i);
+        Serial.print(' ');
+    }
+    Serial.println('\n');
+    Serial.println("Connection established!");
+    Serial.print("IP address:\t");
+    Serial.println(WiFi.localIP());
+
     mpu.setAccelerometerRange(MPU6050_RANGE_16_G);
     mpu.setGyroRange(MPU6050_RANGE_250_DEG);
     mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
@@ -166,7 +178,11 @@ void setup(void) {
 }
 
 void loop() {
-    MDNS.update();
+    // MDNS.update();
+    // Serial.println('\n');
+    // Serial.println("Connection established!");
+    // Serial.print("IP address:\t");
+    // Serial.println(WiFi.localIP());
     server.handleClient();
     sensors_event_t a, g, temp;
     mpu.getEvent(&a, &g, &temp);
