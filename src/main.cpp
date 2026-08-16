@@ -21,6 +21,7 @@ Difficulty difficulty = medium_difficulty;
 bool present = false;
 int tamper_counter = 0;
 Behavior behavior;
+time_t start = time(0) - 10 * 60;
 int GREEN = 14;
 int BLUE = 12;
 int RED = 16;
@@ -105,6 +106,7 @@ void game_mode() {
 
 void start_game() {
     set_behavior(Behavior::good);
+    start = time(0);
     handle_root();
 }
 
@@ -173,8 +175,10 @@ void loop() {
 
     fetch_new_dataframe(accel_data, a.acceleration);
 
+    double seconds_since_start = difftime(time(0), start);
+
     auto new_behavior = get_behavior_from_accel(accel_data, difficulty);
-    if (new_behavior > behavior || present) {
+    if (seconds_since_start <= 5.0f | behavior < Behavior::bad || new_behavior > behavior || present) {
         set_behavior(new_behavior);
     }
 
